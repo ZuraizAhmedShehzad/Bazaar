@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+{% block title %}
+Inbox
+{% endblock %}
+
+{% block content %}
+
+<div class="py-8 flex flex-col items-center">
+    <div class="max-w-3xl w-full bg-white rounded-lg shadow-lg p-6">
+        <h1 class="mb-6 text-4xl font-bold text-gray-900 text-center">Your Inbox</h1>
+
+        <div class="space-y-6 max-h-96 overflow-y-auto" data-simplebar data-simplebar-auto-hide="false">
+            {% for conversation in conversations %}
+                <a href="{% url 'conversation:detail' conversation.id %}" class="hover:bg-gray-200 transition duration-300 rounded-lg p-6 flex items-center space-x-4 border-b border-gray-300">
+                    <img src="{{ conversation.item.image.url }}" class="w-24 h-24 rounded-xl">
+
+                    <div>
+                        {% for member in conversation.members.all %}
+                            {% if member != request.user %}
+                                <p class="mb-1 text-lg font-semibold text-gray-800">{{ member.username }}</p>
+                                <p class="text-sm text-gray-600">{{ conversation.modified_at|date:"F j, Y H:i" }}</p>
+                                <p class="mt-2 text-base text-gray-700">{{ conversation.item.name }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/simplebar@5.3.6/dist/simplebar.min.css">
+<script src="https://unpkg.com/simplebar@5.3.6/dist/simplebar.min.js"></script>
+
+{% endblock %}

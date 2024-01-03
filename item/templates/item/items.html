@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Items{% endblock %}
+
+{% block content %}
+    <div class="flex mt-8">
+        <!-- Side Panel -->
+        <div class="w-1/4 bg-gray-100 p-4 rounded-md">
+            <!-- Search Form -->
+            <form method="get" action="{% url 'item:items' %}" class="mb-6">
+                <input name="query" class="w-full py-2 px-4 border rounded-md focus:outline-none focus:border-teal-500" type="text" value="{{ query }}" placeholder="Search for items...">
+                <button class="mt-2 py-2 px-4 text-lg bg-teal-500 text-white rounded-md hover:bg-teal-600 transition-all">Search</button>
+            </form>
+
+            <!-- Categories -->
+            <div class="mb-6">
+                <p class="font-semibold text-lg">Categories</p>
+                <ul>
+                    {% for category in categories %}
+                        <li class="py-2 px-2 rounded-md {% if category.id == category_id %} bg-gray-200{% endif %}">
+                            <a href="{% url 'item:items' %}?query={{ query }}&category={{ category.id }}">{{ category.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Clear Filters -->
+            <div>
+                <p class="font-semibold text-lg">Clear Filters</p>
+                <ul>
+                    <li><a href="{% url 'item:items' %}" class="mt-2 py-2 px-4 inline-block bg-yellow-500 text-lg rounded-md text-white hover:bg-yellow-600 transition-all">Clear</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Items Section -->
+        <div class="w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {% for item in items %}
+                <a href="{% url 'item:detail' item.id %}" class="flex flex-col h-full overflow-hidden bg-white border border-gray-200 rounded-md shadow-lg transition-transform transform hover:scale-105">
+                    <div class="overflow-hidden h-48">
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="object-cover w-full h-full rounded-t-md">
+                    </div>
+                    <div class="flex-1 p-4">
+                        <h2 class="text-xl font-semibold mb-2">{{ item.name }}</h2>
+                        <p class="text-gray-700">Price: {{ item.price }}</p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
